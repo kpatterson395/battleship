@@ -11,17 +11,17 @@ import SelectBoard from './SelectBoard'
 
 const initialBoard = {
     battleships: [
-        // { name: 'carrier', start: { row: 'A', col: 1 }, vertical: 0, length: 5, completed: false, damage: 0 },
-        // { name: 'battleship', start: { row: 'B', col: 3 }, vertical: 1, length: 4, completed: false, damage: 0 },
-        // { name: 'cruiser', start: { row: 'E', col: 6 }, vertical: 1, length: 3, completed: false, damage: 0 },
-        // { name: 'submarine', start: { row: 'H', col: 0 }, vertical: 1, length: 3, completed: false, damage: 0 },
-        // { name: 'destroyer', start: { row: 'I', col: 4 }, vertical: 0, length: 2, completed: false, damage: 0 }
+        // { name: 'carrier', pieces: ['A1', 'A2', 'A3', 'A4', 'A5'], length: 5, completed: false, damage: 0 },
+        // { name: 'battleship', pieces: ['B1', 'B2', 'B3', 'B4'], length: 4, completed: false, damage: 0 },
+        // { name: 'cruiser', pieces: ['C1', 'D1', 'E1'], length: 3, completed: false, damage: 0 },
+        // { name: 'submarine', pieces: ['I1', 'I2', 'I3'], length: 3, completed: false, damage: 0 },
+        // { name: 'destroyer', pieces: ['E9', 'F9'], length: 2, completed: false, damage: 0 }
     ],
     hits: []
 }
 
 
-// A: [1, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+// A: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
 // B: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 // C: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 // D: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -94,7 +94,6 @@ const GameBoard = () => {
             </div>
             <div>
                 <Player board={playerBoardState} />
-
                 <p>{`${sunkPlayerCount.length} battleships sunk`} </p>
             </div>
         </div>

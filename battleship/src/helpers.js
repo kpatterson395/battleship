@@ -1,32 +1,12 @@
 const letters = Array.from("ABCDEFGHIJ")
 
-export function populateShip(ship) {
-    const { start, vertical, length } = ship
-    let shipPieces = []
-    shipPieces.push(start.row + start.col)
-    if (!vertical) {
-        for (let i = 1; i < length; i++) {
-            let newColumn = start.col + i
-            shipPieces.push(start.row + newColumn)
-        }
-    }
-    else {
 
-        let starting = letters.indexOf(start.row)
-        for (let i = starting + 1; i < length + starting; i++) {
-            let newRow = letters[i]
-            shipPieces.push(newRow + start.col)
-        }
-    }
-    return shipPieces
-}
 
 export function isShip(piece, battleships) {
 
     let hitShip = ''
     battleships.forEach((battleship) => {
-        const arr = populateShip(battleship)
-        if (arr.includes(piece)) {
+        if (battleship.pieces.includes(piece)) {
             hitShip = battleship.name
         }
 
@@ -34,10 +14,7 @@ export function isShip(piece, battleships) {
     return hitShip
 }
 
-export function isShipSunk(battleship, hits) {
-    const arr = populateShip(battleship)
-    return arr.every(item => hits.includes(item))
-}
+
 
 export function generateRandomHit(hits) {
     let randHit = ''

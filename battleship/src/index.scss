@@ -60,10 +60,19 @@ body {
 
     ul {
         text-align: left;
+        list-style: none;
     }
 }
 
 .mini {
     height: 20px;
     width: 20px;
+}
+
+.selected {
+    color: blue;
+}
+
+.locked {
+    color: red
 }
