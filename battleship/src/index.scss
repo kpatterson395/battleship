@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400&display=swap');
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    text-align: center;
+}
+
+.GameBoard {
+    display: inline-flex;
+}
+
+.GamePiece {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid black;
+    display: inline-block;
+    margin-right: 2px;
+}
+
+.board {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 5px;
+}
+
+.gameover-modal {
+    position: absolute;
+    z-index: 100;
+    top: 30%;
+    left: 35%;
+    width: 30%;
+    height: 30%;
+    text-align: center;
+    background-color: #ebeef5;
+    border-radius: 5px;
+
+    h4 {
+        padding-top: 10px;
+    }
+}
+
+.select-modal {
+    position: absolute;
+    z-index: 100;
+    top: 10%;
+    left: 25%;
+    width: 50%;
+    height: 70%;
+    text-align: center;
+    background-color: #ebeef5;
+    border-radius: 5px;
+}
+
+.select-board {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: baseline;
+
+    ul {
+        text-align: left;
+    }
+}
+
+.mini {
+    height: 20px;
+    width: 20px;
+}
