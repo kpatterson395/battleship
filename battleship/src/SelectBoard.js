@@ -14,9 +14,9 @@ const initialGrid = [
 //make sure you can't select where another ship is
 
 // vertical and horizontal can be -1 for other direction
-const SelectBoard = () => {
+const SelectBoard = ({ setSelection }) => {
     const letters = Array.from("ABCDEFGHIJ")
-    const initialOptions = { verticalUp: [], verticalDown: [], horizontalLeft: [], horizontalRight: [], selectOptionMode: false }
+    const initialOptions = { center: '', verticalUp: [], verticalDown: [], horizontalLeft: [], horizontalRight: [], selectOptionMode: false }
 
     const [currentShip, setCurrentShip] = useState('')
     const [selectedShipGrid, setSelectedShipGrid] = useState(initialGrid)
@@ -38,33 +38,53 @@ const SelectBoard = () => {
 
     }
 
+    const alreadySelected = (piece) => {
+        let includes = false
+        selectedShipGrid.forEach((ship) => {
+            if (ship.pieces.includes(piece)) {
+                includes = true
+            }
+        })
+        return includes
+    }
+
+
     const highlight = (start) => {
         let length = selectedShipGrid.find((ship) => ship.name === currentShip).length
-        let options = { ...initialOptions, selectOptionMode: true }
+        let centerPiece = `${start.row}${start.col}`
+        let options = { ...initialOptions, selectOptionMode: true, center: centerPiece }
         if ((start.col + length - 1) <= 9) {
-            options.horizontalRight.push(`${start.row}${start.col}`)
             for (let i = 1; i < length; i++) {
                 let newCol = start.col + i
                 options.horizontalRight.push(start.row + newCol)
             }
+            if (options.horizontalRight.some((piece) => alreadySelected(piece))) {
+                options.horizontalRight = []
+            }
         }
         if ((start.col - length + 1) >= 0) {
-            options.horizontalLeft.push(`${start.row}${start.col}`)
             for (let i = start.col - 1; i > start.col - (length); i--) {
                 options.horizontalLeft.push(start.row + i)
+            }
+            if (options.horizontalLeft.some((piece) => alreadySelected(piece))) {
+                options.horizontalLeft = []
             }
         }
         let starting = letters.indexOf(start.row)
         if ((starting + length - 1) <= 9) {
-            options.verticalUp.push(`${start.row}${start.col}`)
             for (let i = starting + 1; i < length + starting; i++) {
                 options.verticalUp.push(letters[i] + start.col)
             }
+            if (options.verticalUp.some((piece) => alreadySelected(piece))) {
+                options.verticalUp = []
+            }
         }
         if ((starting - length + 1) >= 0) {
-            options.verticalDown.push(`${start.row}${start.col}`)
             for (let i = starting - 1; i > starting - length; i--) {
                 options.verticalDown.push(letters[i] + start.col)
+            }
+            if (options.verticalDown.some((piece) => alreadySelected(piece))) {
+                options.verticalDown = []
             }
         }
         setOptions(options)
@@ -72,7 +92,10 @@ const SelectBoard = () => {
 
     const handleSelectedGrid = (row, col) => {
         //if selecting options for ship, highlight all possible options
-        if (!options.selectOptionMode) {
+        if (alreadySelected(`${row}${col}`)) {
+            alert('That spot is taken! Choose again')
+        }
+        else if (!options.selectOptionMode) {
             highlight({ row, col })
         } else {
             //else if you are selected one of the 4 options, lock in ship position
@@ -81,7 +104,7 @@ const SelectBoard = () => {
                 setSelectedShipGrid((prevState) => {
                     let newState = prevState.map(ship => {
                         if (ship.name === currentShip) {
-                            return { ...ship, pieces: [...inOptions(piece)] }
+                            return { ...ship, pieces: [...inOptions(piece), options.center] }
                         } else return ship
                     })
                     return newState
@@ -98,6 +121,19 @@ const SelectBoard = () => {
 
 
     const changeSelectedShip = (selected) => {
+        if (shipsLocked.includes(selected)) {
+            setShipsLocked(prevState => {
+                return prevState.filter(ship => ship !== selected)
+            })
+            setSelectedShipGrid(prevState => {
+                return prevState.map((ship) => {
+                    if (ship.name === selected) {
+                        return { ...ship, pieces: [] }
+                    }
+                    else return ship
+                })
+            })
+        }
         setCurrentShip(selected)
     }
 
@@ -105,7 +141,7 @@ const SelectBoard = () => {
         if (isShip(piece, selectedShipGrid)) { //dont want this function if currentship
             return 'rgba(200, 0, 8, 1)'
         }
-        if (inOptions(piece)) {
+        if (inOptions(piece) || piece == options.center) {
             return 'rgba(200, 0, 8, 0.5)'
         } else {
             return 'white'
@@ -118,6 +154,14 @@ const SelectBoard = () => {
         } else if (shipsLocked.includes(ship)) {
             return 'locked'
         } else return ''
+    }
+
+    const submitSelection = () => {
+        if (selectedShipGrid.every((ship) => ship.pieces.length === ship.length)) {
+            setSelection(selectedShipGrid)
+        } else {
+            alert('Please add all ships before locking in')
+        }
     }
 
     return (
@@ -141,7 +185,7 @@ const SelectBoard = () => {
                                             return (
                                                 <div
                                                     key={uuidv4()}
-                                                    onClick={() => handleSelectedGrid(row, i)}
+                                                    onClick={() => currentShip && handleSelectedGrid(row, i)}
                                                     className={`GamePiece mini`}
                                                     style={{ backgroundColor: shipColor(`${row}${i}`) }}
                                                 >
@@ -157,7 +201,10 @@ const SelectBoard = () => {
                     }
                 </div>
             </div>
-            <button>
+            <button disabled={!options.selectOptionMode} onClick={() => setOptions(initialOptions)}>
+                Cancel Selection
+            </button>
+            <button disabled={!selectedShipGrid.every((ship) => ship.pieces.length === ship.length)} onClick={submitSelection}>
                 Lock in selection
             </button>
         </div >

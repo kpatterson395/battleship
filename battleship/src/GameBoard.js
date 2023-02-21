@@ -10,27 +10,10 @@ import SelectBoard from './SelectBoard'
 
 
 const initialBoard = {
-    battleships: [
-        // { name: 'carrier', pieces: ['A1', 'A2', 'A3', 'A4', 'A5'], length: 5, completed: false, damage: 0 },
-        // { name: 'battleship', pieces: ['B1', 'B2', 'B3', 'B4'], length: 4, completed: false, damage: 0 },
-        // { name: 'cruiser', pieces: ['C1', 'D1', 'E1'], length: 3, completed: false, damage: 0 },
-        // { name: 'submarine', pieces: ['I1', 'I2', 'I3'], length: 3, completed: false, damage: 0 },
-        // { name: 'destroyer', pieces: ['E9', 'F9'], length: 2, completed: false, damage: 0 }
-    ],
+    battleships: [],
     hits: []
 }
 
-
-// A: [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-// B: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// C: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// D: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// E: [1, 0, 0, 0, 0, 0, 1, 1, 1, 0],
-// F: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// G: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// H: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// I: [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-// J: [1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 
 const GameBoard = () => {
 
@@ -72,7 +55,10 @@ const GameBoard = () => {
         setSunkPlayerCount([])
     }
 
-
+    const setPlayerSelection = (selection) => {
+        setPlayerBoardState({ battleships: selection, hits: [] })
+        setOpponentBoardState({ battleships: selection, hits: [] })
+    }
 
 
     return (
@@ -86,7 +72,7 @@ const GameBoard = () => {
                 </div>
             }
             {!playerBoardState.battleships.length && (
-                <SelectBoard />
+                <SelectBoard setSelection={setPlayerSelection} />
             )}
             <div>
                 <Opponent board={opponentBoardState} addSelected={addSelectedOpponent} />
