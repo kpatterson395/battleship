@@ -1,24 +1,45 @@
 import React, { useEffect, useState } from 'react'
 import Player from './Player'
 import Opponent from './Opponent'
-import { generateRandomHit, isShip, add } from './helpers'
+import {
+    generateRandomHit,
+    isShip,
+    add,
+    generateRandomDirection
+} from './helpers'
+
 import SelectBoard from './SelectBoard'
+import { initialGrid } from './data'
 // pieces: 2, 3, 3, 4, 5
 
 // will need to have initial screen to choose pieces
 // decison logic for "random" guesses
 
 
-const initialBoard = {
-    battleships: [],
-    hits: []
+
+const randomShipPicker = () => {
+
+    let alreadyPicked = []
+    //is possible to have piece where no direction works??
+    let newGrid = initialGrid.map((ship) => {
+        let genPieces = []
+        let hit = generateRandomHit(genPieces)
+        do {
+            let directionFunction = generateRandomDirection()
+            genPieces = directionFunction({ row: hit[0], col: parseInt(hit[1]) }, ship.length, alreadyPicked)
+        } while (genPieces.length === 0)
+        genPieces.push(hit)
+        alreadyPicked.push({ pieces: genPieces })
+        return { ...ship, pieces: genPieces }
+    })
+    return newGrid
 }
 
 
 const GameBoard = () => {
 
-    const [playerBoardState, setPlayerBoardState] = useState(initialBoard)
-    const [opponentBoardState, setOpponentBoardState] = useState(initialBoard)
+    const [playerBoardState, setPlayerBoardState] = useState({ battleships: [], hits: [] })
+    const [opponentBoardState, setOpponentBoardState] = useState({ battleships: [], hits: [] })
     const [sunkOppCount, setSunkOppCount] = useState([])
     const [sunkPlayerCount, setSunkPlayerCount] = useState([])
 
@@ -49,15 +70,16 @@ const GameBoard = () => {
     }
 
     const reset = () => {
-        setPlayerBoardState(initialBoard)
-        setOpponentBoardState(initialBoard)
+        setPlayerBoardState({ battleships: [], hits: [] })
+        setOpponentBoardState({ battleships: [], hits: [] })
         setSunkOppCount([])
         setSunkPlayerCount([])
     }
 
     const setPlayerSelection = (selection) => {
+
         setPlayerBoardState({ battleships: selection, hits: [] })
-        setOpponentBoardState({ battleships: selection, hits: [] })
+        setOpponentBoardState({ battleships: randomShipPicker(), hits: [] })
     }
 
 
@@ -65,9 +87,12 @@ const GameBoard = () => {
 
         <div className='GameBoard'>
             {
-                (sunkPlayerCount.length === 5 || sunkOppCount.length === 5) &&
+                (sunkPlayerCount && sunkPlayerCount.length === 5 || sunkOppCount && sunkOppCount.length === 5) &&
                 <div className='gameover-modal'>
-                    <h4>Gameover!</h4>
+                    <h4>Gameover</h4>
+                    <h5>
+                        {sunkPlayerCount.length === 5 ? 'You lost...' : 'You won!'}
+                    </h5>
                     <button onClick={reset}>Reset Game</button>
                 </div>
             }

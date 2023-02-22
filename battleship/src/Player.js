@@ -1,8 +1,7 @@
 import GamePiece from './GamePiece'
 import { isShip } from "./helpers"
 import { v4 as uuidv4 } from 'uuid';
-
-const letters = Array.from("ABCDEFGHIJ")
+import { letters } from './data';
 
 const Player = ({ board }) => {
 

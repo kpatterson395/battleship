@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { isShip } from './helpers';
-
-const initialGrid = [
-    { name: 'carrier', pieces: [], length: 5, completed: false, damage: 0 },
-    { name: 'battleship', pieces: [], length: 4, completed: false, damage: 0 },
-    { name: 'cruiser', pieces: [], length: 3, completed: false, damage: 0 },
-    { name: 'submarine', pieces: [], length: 3, completed: false, damage: 0 },
-    { name: 'destroyer', pieces: [], length: 2, completed: false, damage: 0 }
-]
+import { alreadySelected, isShip, generateHorizontalLeft, generateHorizontalRight, generateVerticalDown, generateVerticalUp } from './helpers';
+import { initialGrid } from './data';
+import { letters, initialOptions } from './data';
 
 
 //make sure you can't select where another ship is
 
 // vertical and horizontal can be -1 for other direction
 const SelectBoard = ({ setSelection }) => {
-    const letters = Array.from("ABCDEFGHIJ")
-    const initialOptions = { center: '', verticalUp: [], verticalDown: [], horizontalLeft: [], horizontalRight: [], selectOptionMode: false }
 
     const [currentShip, setCurrentShip] = useState('')
     const [selectedShipGrid, setSelectedShipGrid] = useState(initialGrid)
@@ -35,68 +27,29 @@ const SelectBoard = ({ setSelection }) => {
         } else {
             return null
         }
-
     }
 
-    const alreadySelected = (piece) => {
-        let includes = false
-        selectedShipGrid.forEach((ship) => {
-            if (ship.pieces.includes(piece)) {
-                includes = true
-            }
-        })
-        return includes
-    }
 
 
     const highlight = (start) => {
         let length = selectedShipGrid.find((ship) => ship.name === currentShip).length
         let centerPiece = `${start.row}${start.col}`
-        let options = { ...initialOptions, selectOptionMode: true, center: centerPiece }
-        if ((start.col + length - 1) <= 9) {
-            for (let i = 1; i < length; i++) {
-                let newCol = start.col + i
-                options.horizontalRight.push(start.row + newCol)
-            }
-            if (options.horizontalRight.some((piece) => alreadySelected(piece))) {
-                options.horizontalRight = []
-            }
-        }
-        if ((start.col - length + 1) >= 0) {
-            for (let i = start.col - 1; i > start.col - (length); i--) {
-                options.horizontalLeft.push(start.row + i)
-            }
-            if (options.horizontalLeft.some((piece) => alreadySelected(piece))) {
-                options.horizontalLeft = []
-            }
-        }
-        let starting = letters.indexOf(start.row)
-        if ((starting + length - 1) <= 9) {
-            for (let i = starting + 1; i < length + starting; i++) {
-                options.verticalUp.push(letters[i] + start.col)
-            }
-            if (options.verticalUp.some((piece) => alreadySelected(piece))) {
-                options.verticalUp = []
-            }
-        }
-        if ((starting - length + 1) >= 0) {
-            for (let i = starting - 1; i > starting - length; i--) {
-                options.verticalDown.push(letters[i] + start.col)
-            }
-            if (options.verticalDown.some((piece) => alreadySelected(piece))) {
-                options.verticalDown = []
-            }
-        }
-        setOptions(options)
+        let horizontalRight = generateHorizontalRight(start, length, selectedShipGrid)
+        let horizontalLeft = generateHorizontalLeft(start, length, selectedShipGrid)
+        let verticalUp = generateVerticalUp(start, length, selectedShipGrid)
+        let verticalDown = generateVerticalDown(start, length, selectedShipGrid)
+
+        setOptions({ horizontalLeft, horizontalRight, verticalDown, verticalUp, selectOptionMode: true, center: centerPiece })
     }
 
     const handleSelectedGrid = (row, col) => {
         //if selecting options for ship, highlight all possible options
-        if (alreadySelected(`${row}${col}`)) {
+        if (alreadySelected(`${row}${col}`, selectedShipGrid)) {
             alert('That spot is taken! Choose again')
         }
         else if (!options.selectOptionMode) {
             highlight({ row, col })
+
         } else {
             //else if you are selected one of the 4 options, lock in ship position
             let piece = `${row}${col}`
@@ -109,7 +62,7 @@ const SelectBoard = ({ setSelection }) => {
                     })
                     return newState
                 })
-                setOptions(initialOptions)
+                setOptions({ center: '', verticalUp: [], verticalDown: [], horizontalLeft: [], horizontalRight: [], selectOptionMode: false })
                 setShipsLocked(prevState => [...prevState, currentShip])
                 setCurrentShip('')
 
@@ -117,8 +70,6 @@ const SelectBoard = ({ setSelection }) => {
         }
 
     }
-
-
 
     const changeSelectedShip = (selected) => {
         if (shipsLocked.includes(selected)) {
@@ -166,16 +117,21 @@ const SelectBoard = ({ setSelection }) => {
 
     return (
         <div className='select-modal'>
-            <h2>select board</h2>
+            <h2>Make your board</h2>
             <div className="select-board">
-                <ul>
-                    <li onClick={() => changeSelectedShip('carrier')} className={listColor('carrier')}>carrier - 5</li>
-                    <li onClick={() => changeSelectedShip('battleship')} className={listColor('battleship')}>battleship - 4</li>
-                    <li onClick={() => changeSelectedShip('cruiser')} className={listColor('cruiser')}>cruiser - 3</li>
-                    <li onClick={() => changeSelectedShip('submarine')} className={listColor('submarine')}>submarine - 3</li>
-                    <li onClick={() => changeSelectedShip('destroyer')} className={listColor('destroyer')}>destroyer - 2</li>
-                </ul>
                 <div>
+                    <h4>Choose a ship:</h4>
+                    <ul>
+                        <li onClick={() => changeSelectedShip('carrier')} className={listColor('carrier')}>Carrier - 5</li>
+                        <li onClick={() => changeSelectedShip('battleship')} className={listColor('battleship')}>Battleship - 4</li>
+                        <li onClick={() => changeSelectedShip('cruiser')} className={listColor('cruiser')}>Cruiser - 3</li>
+                        <li onClick={() => changeSelectedShip('submarine')} className={listColor('submarine')}>Submarine - 3</li>
+                        <li onClick={() => changeSelectedShip('destroyer')} className={listColor('destroyer')}>Destroyer - 2</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4>Choose a position:</h4>
                     {
                         letters.map((row) => {
                             return (
