@@ -53,7 +53,11 @@ const SelectBoard = ({ setSelection }) => {
         } else {
             //else if you are selected one of the 4 options, lock in ship position
             let piece = `${row}${col}`
-            if (inOptions(piece)) {
+            if (!inOptions(piece)) {
+                setOptions(initialOptions)
+                highlight({ row, col })
+            }
+            else if (inOptions(piece)) {
                 setSelectedShipGrid((prevState) => {
                     let newState = prevState.map(ship => {
                         if (ship.name === currentShip) {
@@ -92,9 +96,13 @@ const SelectBoard = ({ setSelection }) => {
         if (isShip(piece, selectedShipGrid)) { //dont want this function if currentship
             return 'rgba(200, 0, 8, 1)'
         }
-        if (inOptions(piece) || piece == options.center) {
+        if (inOptions(piece)) {
             return 'rgba(200, 0, 8, 0.5)'
-        } else {
+        }
+        else if (piece == options.center) {
+            return 'rgba(200, 0, 8, 0.9)'
+        }
+        else {
             return 'white'
         }
     }

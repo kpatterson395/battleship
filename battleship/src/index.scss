@@ -60,13 +60,13 @@ body {
         padding: .5em;
         border: 1px solid rgba(43, 43, 182, 0);
         border-radius: 5px;
-        background-color: rgba(43, 43, 182, 1);
+        background-color: #6bb5fa;
         color: white;
 
         &:hover {
-            border: 1px solid rgba(43, 43, 182, 1);
+            border: 1px solid #6bb5fa;
             background-color: rgba(43, 43, 182, 0);
-            color: rgba(43, 43, 182, 1);
+            color: #6bb5fa;
             cursor: pointer;
         }
     }
