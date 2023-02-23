@@ -4,11 +4,14 @@ const GamePiece = ({ hit, ship, opponent, handleClick }) => {
 
     const color = () => {
         if (hit && ship) {
-            return 'red'
+            //red
+            return '#f21b7c'
         } else if (hit) {
-            return 'black'
+            //gray
+            return '#757273'
         } else if (ship && !opponent) {
-            return 'blue'
+            //blue
+            return '#6bb5fa'
         } else {
             return 'white'
         }
