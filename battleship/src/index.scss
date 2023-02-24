@@ -1,5 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400&display=swap');
 
+@mixin button {
+
+    margin: 1em;
+    padding: .5em;
+    border: 1px solid rgba(43, 43, 182, 0);
+    border-radius: 5px;
+    background-color: rgba(107, 181, 250, 1);
+    color: white;
+
+    &:disabled {
+        background-color: rgba(107, 181, 250, 0.3);
+    }
+
+    &:hover:enabled {
+        border: 1px solid #6bb5fa;
+        background-color: rgba(43, 43, 182, 0);
+        color: #6bb5fa;
+        cursor: pointer;
+    }
+
+}
+
 body {
     box-sizing: border-box;
     font-family: 'Noto Sans', sans-serif;
@@ -36,60 +58,90 @@ body {
     width: 30%;
     height: 30%;
     text-align: center;
-    background-color: #ebeef5;
-    border-radius: 5px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+
+    .loser {
+        color: red;
+    }
+
+    .winner {
+        color: #4bb367;
+    }
+
+    button {
+        @include button
+    }
 
     h4 {
         padding-top: 10px;
+
     }
+}
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
 }
 
 .select-modal {
-    position: absolute;
-    z-index: 100;
-    top: 10%;
-    left: 25%;
-    width: 50%;
-    text-align: center;
-    background-color: #f7f7f7;
-    border-radius: 5px;
-    padding-bottom: 5em;
+    margin: auto;
+    width: 90%;
+    max-width: 40rem;
+    text-align: left;
+    background-color: white;
+    border-radius: 10px;
+    padding: 50px;
 
     button {
-        margin: 1em;
-        padding: .5em;
-        border: 1px solid rgba(43, 43, 182, 0);
-        border-radius: 5px;
-        background-color: #6bb5fa;
-        color: white;
-
-        &:hover {
-            border: 1px solid #6bb5fa;
-            background-color: rgba(43, 43, 182, 0);
-            color: #6bb5fa;
-            cursor: pointer;
-        }
+        @include button
     }
 }
+
+
 
 .select-board {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: baseline;
 
     h4 {
         margin-bottom: 15px;
     }
 
+
+    .ship-list {
+        width: 50%;
+    }
+
+    .ship-place {
+        width: 50%;
+        text-align: center;
+        background-color: #f7f7f7;
+        padding-bottom: 1em;
+    }
+
     ul {
         text-align: left;
         list-style: none;
+        padding: 0;
 
         li {
             cursor: pointer;
+
         }
     }
+}
+
+.select-buttons {
+    text-align: center;
 }
 
 .mini {
@@ -97,10 +149,14 @@ body {
     width: 20px;
 }
 
+.unselected {
+    color: rgba(84, 84, 84, 0.5);
+}
+
 .selected {
-    color: blue;
+    color: rgba(84, 84, 84, 1);
 }
 
 .locked {
-    color: red
+    color: rgba(107, 181, 250, 1);
 }

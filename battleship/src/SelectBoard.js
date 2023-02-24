@@ -16,14 +16,15 @@ const SelectBoard = ({ setSelection }) => {
     const [shipsLocked, setShipsLocked] = useState([])
 
     const inOptions = (piece) => {
-        if (options.verticalUp.includes(piece)) {
-            return options.verticalUp
-        } else if (options.verticalDown.includes(piece)) {
-            return options.verticalDown
-        } else if (options.horizontalLeft.includes(piece)) {
-            return options.horizontalLeft
-        } else if (options.horizontalRight.includes(piece)) {
-            return options.horizontalRight
+        const { verticalUp, verticalDown, horizontalLeft, horizontalRight } = options
+        if (verticalUp.includes(piece)) {
+            return verticalUp
+        } else if (verticalDown.includes(piece)) {
+            return verticalDown
+        } else if (horizontalLeft.includes(piece)) {
+            return horizontalLeft
+        } else if (horizontalRight.includes(piece)) {
+            return horizontalRight
         } else {
             return null
         }
@@ -54,7 +55,7 @@ const SelectBoard = ({ setSelection }) => {
             //else if you are selected one of the 4 options, lock in ship position
             let piece = `${row}${col}`
             if (!inOptions(piece)) {
-                setOptions(initialOptions)
+                // setOptions(initialOptions)
                 highlight({ row, col })
             }
             else if (inOptions(piece)) {
@@ -99,7 +100,7 @@ const SelectBoard = ({ setSelection }) => {
         if (inOptions(piece)) {
             return 'rgba(200, 0, 8, 0.5)'
         }
-        else if (piece == options.center) {
+        else if (piece === options.center) {
             return 'rgba(200, 0, 8, 0.9)'
         }
         else {
@@ -112,7 +113,7 @@ const SelectBoard = ({ setSelection }) => {
             return 'selected'
         } else if (shipsLocked.includes(ship)) {
             return 'locked'
-        } else return ''
+        } else return 'unselected'
     }
 
     const submitSelection = () => {
@@ -124,54 +125,67 @@ const SelectBoard = ({ setSelection }) => {
     }
 
     return (
-        <div className='select-modal'>
-            <h2>Make your board</h2>
-            <div className="select-board">
+        <div className="modal-container">
+
+
+            <div className='select-modal'>
+
+                <h2>Make your board</h2>
                 <div>
-                    <h4>Choose a ship:</h4>
-                    <ul>
-                        <li onClick={() => changeSelectedShip('carrier')} className={listColor('carrier')}>Carrier - 5</li>
-                        <li onClick={() => changeSelectedShip('battleship')} className={listColor('battleship')}>Battleship - 4</li>
-                        <li onClick={() => changeSelectedShip('cruiser')} className={listColor('cruiser')}>Cruiser - 3</li>
-                        <li onClick={() => changeSelectedShip('submarine')} className={listColor('submarine')}>Submarine - 3</li>
-                        <li onClick={() => changeSelectedShip('destroyer')} className={listColor('destroyer')}>Destroyer - 2</li>
-                    </ul>
+                    <div className="select-board">
+                        <div className='ship-list'>
+                            <h4>Choose a ship:</h4>
+                            <ul>
+                                <li onClick={() => changeSelectedShip('carrier')} className={listColor('carrier')}>Carrier - 5</li>
+                                <li onClick={() => changeSelectedShip('battleship')} className={listColor('battleship')}>Battleship - 4</li>
+                                <li onClick={() => changeSelectedShip('cruiser')} className={listColor('cruiser')}>Cruiser - 3</li>
+                                <li onClick={() => changeSelectedShip('submarine')} className={listColor('submarine')}>Submarine - 3</li>
+                                <li onClick={() => changeSelectedShip('destroyer')} className={listColor('destroyer')}>Destroyer - 2</li>
+                            </ul>
+                        </div>
+
+                        <div className='ship-place'>
+                            <h4>Choose a position:</h4>
+                            {
+                                letters.map((row) => {
+                                    return (
+                                        <div key={uuidv4()} className="row">
+                                            {
+                                                letters.map((letter, i) => {
+                                                    return (
+                                                        <div
+                                                            key={uuidv4()}
+                                                            onClick={() => currentShip && handleSelectedGrid(row, i)}
+                                                            className={`GamePiece mini`}
+                                                            style={{ backgroundColor: shipColor(`${row}${i}`) }}
+                                                        >
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+
+                                    )
+
+                                })
+                            }
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div className='select-buttons'>
+                    <button disabled={!options.selectOptionMode} onClick={() => setOptions(initialOptions)}>
+                        Cancel Selection
+                    </button>
+                    <button disabled={!selectedShipGrid.every((ship) => ship.pieces.length === ship.length)} onClick={submitSelection}>
+                        Start Game
+                    </button>
                 </div>
 
-                <div>
-                    <h4>Choose a position:</h4>
-                    {
-                        letters.map((row) => {
-                            return (
-                                <div key={uuidv4()}>
-                                    {
-                                        letters.map((letter, i) => {
-                                            return (
-                                                <div
-                                                    key={uuidv4()}
-                                                    onClick={() => currentShip && handleSelectedGrid(row, i)}
-                                                    className={`GamePiece mini`}
-                                                    style={{ backgroundColor: shipColor(`${row}${i}`) }}
-                                                >
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-
-                            )
-
-                        })
-                    }
-                </div>
             </div>
-            <button disabled={!options.selectOptionMode} onClick={() => setOptions(initialOptions)}>
-                Cancel Selection
-            </button>
-            <button disabled={!selectedShipGrid.every((ship) => ship.pieces.length === ship.length)} onClick={submitSelection}>
-                Lock in selection
-            </button>
-        </div >
+        </div>
     );
 }
 

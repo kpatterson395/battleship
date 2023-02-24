@@ -10,6 +10,7 @@ import {
 
 import SelectBoard from './SelectBoard'
 import { initialGrid } from './data'
+import GameOverModal from './GameOverModal'
 // pieces: 2, 3, 3, 4, 5
 
 // will need to have initial screen to choose pieces
@@ -23,7 +24,8 @@ const randomShipPicker = () => {
     //is possible to have piece where no direction works??
     let newGrid = initialGrid.map((ship) => {
         let genPieces = []
-        let hit = generateRandomHit(genPieces)
+
+        let hit = generateRandomHit(alreadyPicked.reduce((acc, curr) => [...acc, ...curr.pieces], []))
         do {
             let directionFunction = generateRandomDirection()
             genPieces = directionFunction({ row: hit[0], col: parseInt(hit[1]) }, ship.length, alreadyPicked)
@@ -87,14 +89,8 @@ const GameBoard = () => {
 
         <div className='GameBoard'>
             {
-                (sunkPlayerCount && sunkPlayerCount.length === 5 || sunkOppCount && sunkOppCount.length === 5) &&
-                <div className='gameover-modal'>
-                    <h4>Gameover</h4>
-                    <h5>
-                        {sunkPlayerCount.length === 5 ? 'You lost...' : 'You won!'}
-                    </h5>
-                    <button onClick={reset}>Reset Game</button>
-                </div>
+                (sunkPlayerCount.length === 5 || sunkOppCount.length === 5) &&
+                <GameOverModal sunkPlayerCount={sunkPlayerCount} reset={reset} />
             }
             {!playerBoardState.battleships.length && (
                 <SelectBoard setSelection={setPlayerSelection} />
