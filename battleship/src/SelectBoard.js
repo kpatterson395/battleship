@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { alreadySelected, isShip, generateHorizontalLeft, generateHorizontalRight, generateVerticalDown, generateVerticalUp } from './helpers';
 import { initialGrid } from './data';
 import { letters, initialOptions } from './data';
 
-
 //make sure you can't select where another ship is
 
-// vertical and horizontal can be -1 for other direction
-const SelectBoard = ({ setSelection }) => {
+const SelectBoard = ({ setSelection, handleError }) => {
 
     const [currentShip, setCurrentShip] = useState('')
     const [selectedShipGrid, setSelectedShipGrid] = useState(initialGrid)
     const [options, setOptions] = useState(initialOptions)
     const [shipsLocked, setShipsLocked] = useState([])
+
 
     const inOptions = (piece) => {
         const { verticalUp, verticalDown, horizontalLeft, horizontalRight } = options
@@ -30,8 +29,6 @@ const SelectBoard = ({ setSelection }) => {
         }
     }
 
-
-
     const highlight = (start) => {
         let length = selectedShipGrid.find((ship) => ship.name === currentShip).length
         let centerPiece = `${start.row}${start.col}`
@@ -46,7 +43,7 @@ const SelectBoard = ({ setSelection }) => {
     const handleSelectedGrid = (row, col) => {
         //if selecting options for ship, highlight all possible options
         if (alreadySelected(`${row}${col}`, selectedShipGrid)) {
-            alert('That spot is taken! Choose again')
+            handleError('That spot is taken! Choose again')
         }
         else if (!options.selectOptionMode) {
             highlight({ row, col })
@@ -117,16 +114,11 @@ const SelectBoard = ({ setSelection }) => {
     }
 
     const submitSelection = () => {
-        if (selectedShipGrid.every((ship) => ship.pieces.length === ship.length)) {
-            setSelection(selectedShipGrid)
-        } else {
-            alert('Please add all ships before locking in')
-        }
+        setSelection(selectedShipGrid)
     }
 
     return (
         <div className="modal-container">
-
 
             <div className='select-modal'>
 

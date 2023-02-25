@@ -11,11 +11,7 @@ import {
 import SelectBoard from './SelectBoard'
 import { initialGrid } from './data'
 import GameOverModal from './GameOverModal'
-// pieces: 2, 3, 3, 4, 5
-
-// will need to have initial screen to choose pieces
-// decison logic for "random" guesses
-
+import Error from './Error'
 
 
 const randomShipPicker = () => {
@@ -44,18 +40,33 @@ const GameBoard = () => {
     const [opponentBoardState, setOpponentBoardState] = useState({ battleships: [], hits: [] })
     const [sunkOppCount, setSunkOppCount] = useState([])
     const [sunkPlayerCount, setSunkPlayerCount] = useState([])
+    const [errorMessage, setErrorMessage] = useState({ message: '', appear: false })
 
     useEffect(() => {
         if (sunkOppCount.length) {
-            setTimeout(() => alert(`You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`), 100)
+            setErrorMessage({ message: `You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`, appear: true })
+            // setTimeout(() => alert(`You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`), 100)
         }
     }, [sunkOppCount])
 
     useEffect(() => {
         if (sunkPlayerCount.length) {
-            setTimeout(() => alert(`Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`), 100)
+            setErrorMessage({ message: `Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`, appear: true })
+
+            // setTimeout(() => alert(`Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`), 100)
         }
     }, [sunkPlayerCount])
+
+    useEffect(() => {
+        if (errorMessage.appear) {
+            setTimeout(function () {
+                setErrorMessage(prevState => ({ ...prevState, appear: false }))
+            }, 2000);
+            setTimeout(function () {
+                setErrorMessage(prevState => ({ ...prevState, message: '' }))
+            }, 3000);
+        }
+    }, [errorMessage])
 
     const addSelectedOpponent = (selected) => {
         setOpponentBoardState(({ battleships, hits }) => {
@@ -79,24 +90,25 @@ const GameBoard = () => {
     }
 
     const setPlayerSelection = (selection) => {
-
         setPlayerBoardState({ battleships: selection, hits: [] })
         setOpponentBoardState({ battleships: randomShipPicker(), hits: [] })
     }
 
+    const handleError = (message) => setErrorMessage({ message, appear: true })
 
     return (
 
         <div className='GameBoard'>
+            <Error message={errorMessage.message} display={errorMessage.appear ? 'show' : ''} />
             {
                 (sunkPlayerCount.length === 5 || sunkOppCount.length === 5) &&
                 <GameOverModal sunkPlayerCount={sunkPlayerCount} reset={reset} />
             }
             {!playerBoardState.battleships.length && (
-                <SelectBoard setSelection={setPlayerSelection} />
+                <SelectBoard setSelection={setPlayerSelection} handleError={(message) => handleError(message)} />
             )}
             <div>
-                <Opponent board={opponentBoardState} addSelected={addSelectedOpponent} />
+                <Opponent board={opponentBoardState} addSelected={addSelectedOpponent} handleError={(message) => handleError(message)} />
                 <p>{`${sunkOppCount.length} battleships sunk`} </p>
             </div>
             <div>

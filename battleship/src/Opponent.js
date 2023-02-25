@@ -3,12 +3,12 @@ import { isShip } from "./helpers"
 import { v4 as uuidv4 } from 'uuid';
 import { letters } from './data';
 
-const Opponent = ({ board, addSelected }) => {
+const Opponent = ({ board, addSelected, handleError }) => {
 
     const handleSelect = (selected, e) => {
         e.stopPropagation()
         if (board.hits.includes(selected)) {
-            alert('already selected')
+            handleError("You've already selected that spot, try again!")
         } else {
             addSelected(selected)
         }

@@ -160,3 +160,21 @@ body {
 .locked {
     color: rgb(6, 103, 194);
 }
+
+.error-popup {
+    position: absolute;
+    left: 35%;
+    top: 30%;
+    width: 30%;
+    border-radius: 10px;
+    border: 2px solid #ffeeba;
+    color: #856404;
+    background-color: #fff3cd;
+    z-index: 1001;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+}
+
+.show {
+    opacity: 1;
+}
