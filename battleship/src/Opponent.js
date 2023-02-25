@@ -28,7 +28,7 @@ const Opponent = ({ board, addSelected, handleError }) => {
                                         return (
                                             <GamePiece
                                                 handleClick={(e) => handleSelect(`${row}${i}`, e)}
-                                                opponent={true}
+                                                opponent={false}
                                                 hit={board.hits.includes(`${row}${i}`)}
                                                 ship={isShip(`${row}${i}`, board.battleships)}
                                                 key={uuidv4()}

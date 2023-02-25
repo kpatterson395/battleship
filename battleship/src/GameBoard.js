@@ -20,15 +20,14 @@ const randomShipPicker = () => {
     //is possible to have piece where no direction works??
     let newGrid = initialGrid.map((ship) => {
         let genPieces = []
-
-        let hit = generateRandomHit(alreadyPicked.reduce((acc, curr) => [...acc, ...curr.pieces], []))
+        let hit = ''
         do {
+            hit = generateRandomHit(alreadyPicked.reduce((acc, curr) => [...acc, ...curr.pieces], []))
             let directionFunction = generateRandomDirection()
             genPieces = directionFunction({ row: hit[0], col: parseInt(hit[1]) }, ship.length, alreadyPicked)
         } while (genPieces.length === 0)
-        genPieces.push(hit)
-        alreadyPicked.push({ pieces: genPieces })
-        return { ...ship, pieces: genPieces }
+        alreadyPicked.push({ pieces: [...genPieces, hit] })
+        return { ...ship, pieces: [...genPieces, hit] }
     })
     return newGrid
 }
