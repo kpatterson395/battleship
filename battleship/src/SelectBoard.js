@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { alreadySelected, isShip, generateHorizontalLeft, generateHorizontalRight, generateVerticalDown, generateVerticalUp } from './helpers';
 import { initialGrid } from './data';
 import { letters, initialOptions } from './data';
+import GamePiece from './GamePiece';
 
 //make sure you can't select where another ship is
 
@@ -145,13 +146,12 @@ const SelectBoard = ({ setSelection, handleError }) => {
                                             {
                                                 letters.map((letter, i) => {
                                                     return (
-                                                        <div
+                                                        <GamePiece
                                                             key={uuidv4()}
-                                                            onClick={() => currentShip && handleSelectedGrid(row, i)}
-                                                            className={`GamePiece mini`}
-                                                            style={{ backgroundColor: shipColor(`${row}${i}`) }}
-                                                        >
-                                                        </div>
+                                                            handleClick={() => currentShip && handleSelectedGrid(row, i)}
+                                                            mini="mini"
+                                                            bgColor={shipColor(`${row}${i}`)}
+                                                        />
                                                     )
                                                 })
                                             }

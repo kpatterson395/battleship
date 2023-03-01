@@ -1,6 +1,19 @@
 const letters = Array.from("ABCDEFGHIJ")
 
-
+export const color = (hit, ship, opponent) => {
+    if (hit && ship) {
+        //red
+        return '#f21b7c'
+    } else if (hit) {
+        //gray
+        return '#757273'
+    } else if (ship && !opponent) {
+        //blue
+        return '#6bb5fa'
+    } else {
+        return 'white'
+    }
+}
 
 export function isShip(piece, battleships) {
 
@@ -13,8 +26,6 @@ export function isShip(piece, battleships) {
     })
     return hitShip
 }
-
-
 
 export function generateRandomHit(hits) {
     let randHit = ''

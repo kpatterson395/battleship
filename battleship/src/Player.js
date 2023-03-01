@@ -1,5 +1,5 @@
 import GamePiece from './GamePiece'
-import { isShip } from "./helpers"
+import { isShip, color } from "./helpers"
 import { v4 as uuidv4 } from 'uuid';
 import { letters } from './data';
 
@@ -18,8 +18,7 @@ const Player = ({ board }) => {
                                     letters.map((letter, i) => {
                                         return (
                                             <GamePiece
-                                                hit={board.hits.includes(`${row}${i}`)}
-                                                ship={isShip(`${row}${i}`, board.battleships)}
+                                                bgColor={color(board.hits.includes(`${row}${i}`), isShip(`${row}${i}`, board.battleships), false)}
                                                 key={uuidv4()}
                                             />
                                         )

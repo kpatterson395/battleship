@@ -44,7 +44,6 @@ const GameBoard = () => {
     useEffect(() => {
         if (sunkOppCount.length) {
             setErrorMessage({ message: `You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`, appear: true })
-            // setTimeout(() => alert(`You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`), 100)
         }
     }, [sunkOppCount])
 
@@ -52,7 +51,6 @@ const GameBoard = () => {
         if (sunkPlayerCount.length) {
             setErrorMessage({ message: `Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`, appear: true })
 
-            // setTimeout(() => alert(`Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`), 100)
         }
     }, [sunkPlayerCount])
 
@@ -60,10 +58,10 @@ const GameBoard = () => {
         if (errorMessage.appear) {
             setTimeout(function () {
                 setErrorMessage(prevState => ({ ...prevState, appear: false }))
-            }, 2000);
+            }, 1000);
             setTimeout(function () {
                 setErrorMessage(prevState => ({ ...prevState, message: '' }))
-            }, 3000);
+            }, 2000);
         }
     }, [errorMessage])
 
@@ -101,6 +99,7 @@ const GameBoard = () => {
             <Error message={errorMessage.message} display={errorMessage.appear ? 'show' : ''} />
             {
                 (sunkPlayerCount.length === 5 || sunkOppCount.length === 5) &&
+
                 <GameOverModal sunkPlayerCount={sunkPlayerCount} reset={reset} />
             }
             {!playerBoardState.battleships.length && (

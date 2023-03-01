@@ -1,5 +1,5 @@
 import GamePiece from './GamePiece'
-import { isShip } from "./helpers"
+import { isShip, color } from "./helpers"
 import { v4 as uuidv4 } from 'uuid';
 import { letters } from './data';
 
@@ -27,10 +27,8 @@ const Opponent = ({ board, addSelected, handleError }) => {
                                     letters.map((letter, i) => {
                                         return (
                                             <GamePiece
+                                                bgColor={color(board.hits.includes(`${row}${i}`), isShip(`${row}${i}`, board.battleships), true)}
                                                 handleClick={(e) => handleSelect(`${row}${i}`, e)}
-                                                opponent={true}
-                                                hit={board.hits.includes(`${row}${i}`)}
-                                                ship={isShip(`${row}${i}`, board.battleships)}
                                                 key={uuidv4()}
                                             />
                                         )
