@@ -168,7 +168,6 @@ body {
 
 .error-popup {
     position: absolute;
-    left: 35%;
     top: 0;
     width: 30%;
     border-radius: 10px;
@@ -192,6 +191,10 @@ body {
         left: 20%;
         width: 60%;
         height: auto;
+    }
+
+    .error-popup {
+        width: 65%
     }
 }
 
@@ -226,13 +229,3 @@ body {
     }
 
 }
-
-// @media screen and (max-width: 450px) {
-//     .GamePiece {
-//         width: 20px;
-//         height: 20px;
-//     }
-// }
-
-//fix gameover modal responsive
-//bug - empty alert when gameover
