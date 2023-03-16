@@ -1,5 +1,4 @@
 import GameBoard from "./GameBoard";
-import {useState,useEffect } from "react";
 
 function App() {
 
