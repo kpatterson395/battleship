@@ -94,7 +94,6 @@ const GameBoard = () => {
     const handleError = (message) => setErrorMessage({ message, appear: true })
 
     return (
-
         <div className='GameBoard'>
             <Error message={errorMessage.message} display={errorMessage.appear ? 'show' : ''} />
             {

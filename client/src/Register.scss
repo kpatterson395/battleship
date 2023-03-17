@@ -1,0 +1,26 @@
+.register-btn {
+    margin-top: 2em;
+    background-color: #0275d8;
+    border: none;
+    color: white;
+    border-radius: 0.5em;
+    padding: 0.75em 1.5em;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+label {
+    margin-right: 1em;
+}
+
+.Register div {
+    margin: 1em;
+}
+
+input {
+    border-radius: 0.5em;
+    border: 1px solid gray;
+    padding: 0.5em;
+}

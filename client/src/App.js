@@ -1,4 +1,24 @@
 import GameBoard from "./GameBoard";
+import Register from "./Register";
+import HomeLayout from "./HomeLayout";
+import Login from "./Login"
+
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
+
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<HomeLayout />}>
+      <Route path="/register" element={<Register />} />
+      <Route path="/battleship" element={<GameBoard />} />
+      <Route path="/login" element={<Login />} />
+    </Route>
+  )
+)
+
+
+
+
 
 function App() {
 
@@ -10,10 +30,7 @@ function App() {
   // }, []);
 
   return (
-    <div className="App">
-      <h1>Battleship</h1>
-      <GameBoard />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 
