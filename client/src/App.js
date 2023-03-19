@@ -1,7 +1,7 @@
-import GameBoard from "./GameBoard";
-import Register from "./Register";
+import GameBoard from "./gameplay/GameBoard";
+import Register from "./users/Register";
 import HomeLayout from "./HomeLayout";
-import Login from "./Login"
+import Login from "./users/Login"
 
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 

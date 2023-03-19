@@ -6,12 +6,12 @@ import {
     isShip,
     add,
     generateRandomDirection
-} from './helpers'
+} from '../helpers/helpers'
 
 import SelectBoard from './SelectBoard'
-import { initialGrid } from './data'
+import { initialGrid } from '../helpers/data'
 import GameOverModal from './GameOverModal'
-import Error from './Error'
+import Error from '../Error'
 
 
 const randomShipPicker = () => {

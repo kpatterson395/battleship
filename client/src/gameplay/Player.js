@@ -1,7 +1,7 @@
 import GamePiece from './GamePiece'
-import { isShip, color } from "./helpers"
+import { isShip, color } from "../helpers/helpers"
 import { v4 as uuidv4 } from 'uuid';
-import { letters } from './data';
+import { letters } from '../helpers/data';
 
 const Player = ({ board }) => {
 

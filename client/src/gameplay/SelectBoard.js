@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { alreadySelected, isShip, generateHorizontalLeft, generateHorizontalRight, generateVerticalDown, generateVerticalUp } from './helpers';
-import { initialGrid } from './data';
-import { letters, initialOptions } from './data';
+import { alreadySelected, isShip, generateHorizontalLeft, generateHorizontalRight, generateVerticalDown, generateVerticalUp } from '../helpers/helpers';
+import { initialGrid, letters, initialOptions } from '../helpers/data';
 import GamePiece from './GamePiece';
 
 //make sure you can't select where another ship is

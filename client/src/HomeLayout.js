@@ -7,7 +7,7 @@ const HomeLayout = () => {
            <div className="home-layout">
             <nav>
                 <header>
-                    Battleship
+                    <NavLink className="navbar-link" to="/battleship">Battleship</NavLink>
                 </header>
                 <div>
                     <NavLink className="navbar-link" to="/register">Register</NavLink>

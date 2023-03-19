@@ -75,7 +75,7 @@ app.post("/api/register", async (req, res, next) => {
 
 })
 
-app.post("/api/login", passport.authenticate('local', { successRedirect: '/battleship', failureRedirect: '/', failureMessage: true }), (req, res, next) => {
+app.post("/api/login", passport.authenticate('local', { successRedirect: '/battleship', failureRedirect: '/login', failureMessage: true, failureFlash: true }), (req, res, next) => {
     console.log('success')
 })
 
