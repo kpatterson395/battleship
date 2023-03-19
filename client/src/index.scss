@@ -257,6 +257,24 @@ nav {
         }
     }
 
+    .logout-form {
+        display: inline;
+
+        .logout-btn {
+            background-color: rgba(217, 217, 219, 0);
+            color: #e9e9f0;
+            border: none;
+            padding: .5rem 1rem;
+            border-radius: .25rem;
+            font-size: 1em;
+
+            &:hover {
+                cursor: pointer;
+                background-color: rgba(217, 217, 219, 0.5);
+            }
+        }
+    }
+
     .active {
         background-color: rgba(217, 217, 219, 0.5);
     }

@@ -12,8 +12,8 @@ const HomeLayout = () => {
                 <div>
                     <NavLink className="navbar-link" to="/register">Register</NavLink>
                     <NavLink className="navbar-link" to="/login">Login</NavLink>
-                    <form action="/api/logout" method="POST">
-                        <button>Logout</button>
+                    <form className="logout-form" action="/api/logout" method="POST">
+                        <button className="logout-btn">Logout</button>
                     </form>
                     
                 </div>
