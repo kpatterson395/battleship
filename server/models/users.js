@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require("passport-local-mongoose")
 
-mongoose.connect('mongodb://localhost:27017/battleship')
-    .then(() => {
-        console.log('MONGO CONNECTION OPEN')
-    })
-    .catch((err) => {
-        console.log('mongo connection error!', err)
-    })
+// mongoose.connect('mongodb://localhost:27017/battleship')
+//     .then(() => {
+//         console.log('MONGO CONNECTION OPEN')
+//     })
+//     .catch((err) => {
+//         console.log('mongo connection error!', err)
+//     })
 
 const UserSchema = new mongoose.Schema({
     email: {
@@ -26,5 +26,6 @@ const UserSchema = new mongoose.Schema({
 })
 
 UserSchema.plugin(passportLocalMongoose)
+//adds in username and password fields with checking for uniqueness, hashing, etc
 
 module.exports = mongoose.model('User', UserSchema)

@@ -12,7 +12,10 @@ const HomeLayout = () => {
                 <div>
                     <NavLink className="navbar-link" to="/register">Register</NavLink>
                     <NavLink className="navbar-link" to="/login">Login</NavLink>
-                    <NavLink className="navbar-link" to="/logout">Logout</NavLink>
+                    <form action="/api/logout" method="POST">
+                        <button>Logout</button>
+                    </form>
+                    
                 </div>
 
             </nav>
