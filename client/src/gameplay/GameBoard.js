@@ -16,6 +16,7 @@ import Error from '../Error'
 import UserModal from "./UserModal"
 import PlayerStats from './PlayerStats'
 
+
 const randomShipPicker = () => {
 
     let alreadyPicked = []
@@ -126,6 +127,7 @@ const GameBoard = () => {
     return (
         
         <div className='GameBoard'>
+        
             <Error message={errorMessage.message} display={errorMessage.appear ? 'show' : ''} />
             {
                 (sunkPlayerCount.length === 5 || sunkOppCount.length === 5) &&

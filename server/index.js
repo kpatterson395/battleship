@@ -19,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/battleship')
     })
 
 const app = express();
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 const sessionConfig = {
@@ -29,6 +30,12 @@ const sessionConfig = {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+
+const CatchAsync = func => {
+    return (req, res, next) => {
+        func(req, res, next).catch(next)
     }
 }
 
@@ -49,14 +56,20 @@ app.use((req, res, next) => {
     next()
 })
 
-app.get("/api", (req, res) => {
-    console.log('test')
-    res.json({ message: "Hello from server!" });
+app.get("/api/currentUser", (req, res) => {
+    if (req.user) {
+        res.json({ user: req.user });
+    } else {
+        res.json({})
+    }
 });
 
+app.get("/reroute", (req, res) => {
+    res.send("rerouting")
+})
 
 
-app.post("/api/register", async (req, res, next) => {
+app.post("/api/register", CatchAsync(async (req, res, next) => {
     try {
         const { username, email, password } = req.body
         const user = new User({ username, email })
@@ -66,28 +79,32 @@ app.post("/api/register", async (req, res, next) => {
                 return console.log('error', err)
             }
             req.flash('success', 'Welcome to Battleship')
-            res.send(`Welcome, ${username}!`)
+            res.redirect("/reroute")
         })
 
     } catch (e) {
-        res.send(e.message)
+        console.log(e)
+        req.flash('failure', `Error: ${e.message}`)
     }
 
-})
+}))
 
 app.post("/api/login", passport.authenticate('local', { successRedirect: '/battleship', failureRedirect: '/login', failureMessage: true, failureFlash: true }), (req, res, next) => {
-    console.log('success')
+    res.redirect("/reroute")
 })
 
-app.post("/api/logout", async (req, res, next) => {
+app.post("/api/logout", CatchAsync(async (req, res, next) => {
     console.log('logout!', req.user)
     req.logout(function (err) {
         if (err) { return next(err); }
-        res.send('logged out')
+        res.redirect("/reroute")
     });
+}))
 
-})
-
+app.put("/api/user/:id", CatchAsync(async (req, res) => {
+    const { id } = req.params;
+    let user = await User.findByIdAndUpdate(id, { ...req.body });
+}))
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
