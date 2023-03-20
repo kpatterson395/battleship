@@ -8,11 +8,13 @@ import {
     generateRandomDirection
 } from '../helpers/helpers'
 
+import ModalContainer from './ModalContaner'
+
 import SelectBoard from './SelectBoard'
 import { initialGrid } from '../helpers/data'
 import GameOverModal from './GameOverModal'
 import Error from '../Error'
-
+import UserModal from "./UserModal"
 
 const randomShipPicker = () => {
 
@@ -40,6 +42,14 @@ const GameBoard = () => {
     const [sunkOppCount, setSunkOppCount] = useState([])
     const [sunkPlayerCount, setSunkPlayerCount] = useState([])
     const [errorMessage, setErrorMessage] = useState({ message: '', appear: false })
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+      fetch("/api/currentUser")
+        .then((res) => res.json())
+        .then((data) => setUser(data.username));
+  
+    }, []);
 
     useEffect(() => {
         if (sunkOppCount.length) {
@@ -94,6 +104,7 @@ const GameBoard = () => {
     const handleError = (message) => setErrorMessage({ message, appear: true })
 
     return (
+        
         <div className='GameBoard'>
             <Error message={errorMessage.message} display={errorMessage.appear ? 'show' : ''} />
             {
@@ -101,9 +112,13 @@ const GameBoard = () => {
 
                 <GameOverModal sunkPlayerCount={sunkPlayerCount} reset={reset} />
             }
-            {!playerBoardState.battleships.length && (
-                <SelectBoard setSelection={setPlayerSelection} handleError={(message) => handleError(message)} />
+            {!playerBoardState.battleships.length && user && (
+                <SelectBoard setSelection={setPlayerSelection} user={user} handleError={(message) => handleError(message)} />
             )}
+            {!playerBoardState.battleships.length && !user && (
+                <UserModal setUser={setUser}/>
+            )}
+            
             <div>
                 <Opponent board={opponentBoardState} addSelected={addSelectedOpponent} handleError={(message) => handleError(message)} />
                 <p>{`${sunkOppCount.length} battleships sunk`} </p>

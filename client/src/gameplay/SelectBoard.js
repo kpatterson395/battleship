@@ -6,7 +6,7 @@ import GamePiece from './GamePiece';
 
 //make sure you can't select where another ship is
 
-const SelectBoard = ({ setSelection, handleError }) => {
+const SelectBoard = ({ setSelection, handleError, user }) => {
 
     const [currentShip, setCurrentShip] = useState('')
     const [selectedShipGrid, setSelectedShipGrid] = useState(initialGrid)
@@ -121,8 +121,12 @@ const SelectBoard = ({ setSelection, handleError }) => {
         <div className="modal-container">
 
             <div className='select-modal'>
-
-                <h2>Make your board</h2>
+                {!user ? (
+                    <h1>You're not logged in</h1>
+                ) : (
+                    <h2>Make your board, {user} </h2>
+                )}
+                
                 <div>
                     <div className="select-board">
                         <div className='ship-list'>
