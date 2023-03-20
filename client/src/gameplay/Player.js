@@ -3,11 +3,11 @@ import { isShip, color } from "../helpers/helpers"
 import { v4 as uuidv4 } from 'uuid';
 import { letters } from '../helpers/data';
 
-const Player = ({ board }) => {
+const Player = ({ board, user }) => {
 
     return (
         <div>
-            <h3>Player Board</h3>
+            <h3>{user && user.username ? `${user.username}'s Board` : "Player Board"}</h3>
             <div className='board'>
                 {
                     letters.map((row) => {

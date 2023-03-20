@@ -8,13 +8,13 @@ import {
     generateRandomDirection
 } from '../helpers/helpers'
 
-import ModalContainer from './ModalContaner'
 
 import SelectBoard from './SelectBoard'
 import { initialGrid } from '../helpers/data'
 import GameOverModal from './GameOverModal'
 import Error from '../Error'
 import UserModal from "./UserModal"
+import PlayerStats from './PlayerStats'
 
 const randomShipPicker = () => {
 
@@ -35,6 +35,7 @@ const randomShipPicker = () => {
 }
 
 
+
 const GameBoard = () => {
 
     const [playerBoardState, setPlayerBoardState] = useState({ battleships: [], hits: [] })
@@ -47,20 +48,39 @@ const GameBoard = () => {
     useEffect(() => {
       fetch("/api/currentUser")
         .then((res) => res.json())
-        .then((data) => setUser(data.username));
-  
+        .then((data) => setUser(data.user));
     }, []);
+
+    useEffect(() => {
+        
+        if(user && user.username !== 'Guest'){
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/JSON'},
+                body: JSON.stringify(user)
+            };
+
+            fetch(`/api/user/${user._id}`, requestOptions)
+            .then((res) => res.json())
+        }
+        
+      }, [user]);
 
     useEffect(() => {
         if (sunkOppCount.length) {
             setErrorMessage({ message: `You've sunk their ${sunkOppCount[sunkOppCount.length - 1]}!`, appear: true })
+            if(sunkOppCount.length ===5 && user && user.username !== 'Guest'){
+                setUser(prevState => ({...prevState, won: prevState.won + 1}))
+            }
         }
     }, [sunkOppCount])
 
     useEffect(() => {
         if (sunkPlayerCount.length) {
             setErrorMessage({ message: `Your ${sunkPlayerCount[sunkPlayerCount.length - 1]} has been sunk!`, appear: true })
-
+            if(sunkPlayerCount.length ===5 && user && user.username !== 'Guest'){
+                setUser(prevState => ({...prevState, lost: prevState.lost + 1}))
+            }
         }
     }, [sunkPlayerCount])
 
@@ -124,8 +144,11 @@ const GameBoard = () => {
                 <p>{`${sunkOppCount.length} battleships sunk`} </p>
             </div>
             <div>
-                <Player board={playerBoardState} />
+                <Player board={playerBoardState} user={user}/>
                 <p>{`${sunkPlayerCount.length} battleships sunk`} </p>
+            </div>
+            <div>
+               {user && user.username !== 'Guest' && <PlayerStats user={user}/>} 
             </div>
         </div>
     );

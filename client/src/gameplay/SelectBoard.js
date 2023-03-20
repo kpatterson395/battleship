@@ -124,7 +124,7 @@ const SelectBoard = ({ setSelection, handleError, user }) => {
                 {!user ? (
                     <h1>You're not logged in</h1>
                 ) : (
-                    <h2>Make your board, {user} </h2>
+                    <h2>Make your board, {user.username} </h2>
                 )}
                 
                 <div>
