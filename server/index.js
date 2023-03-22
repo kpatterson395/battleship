@@ -1,16 +1,22 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 const express = require("express");
 const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/users")
 const session = require('express-session')
 const mongoose = require('mongoose')
-const flash = require("connect-flash")
+const MongoDBStore = require("connect-mongo")(session)
 
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/battleship'
+const secret = process.env.secret || 'thisisasecret'
 
 
 const PORT = process.env.PORT || 3001;
 
-mongoose.connect('mongodb://localhost:27017/battleship')
+mongoose.connect(dbUrl)
     .then(() => {
         console.log('MONGO CONNECTION OPEN')
     })
@@ -22,9 +28,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
+const store = new MongoDBStore({
+    url: dbUrl,
+    secret,
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret!',
+    secret,
     resave: false,
+    store,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
@@ -40,7 +57,6 @@ const CatchAsync = func => {
 }
 
 app.use(session(sessionConfig))
-app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 passport.use(new LocalStrategy(User.authenticate()))
@@ -49,12 +65,6 @@ passport.use(new LocalStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
-app.use((req, res, next) => {
-    res.locals.currentUser = req.user
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    next()
-})
 
 app.get("/api/currentUser", (req, res) => {
     if (req.user) {
@@ -78,23 +88,23 @@ app.post("/api/register", CatchAsync(async (req, res, next) => {
             if (err) {
                 return console.log('error', err)
             }
-            req.flash('success', 'Welcome to Battleship')
             res.redirect("/reroute")
         })
 
     } catch (e) {
         console.log(e)
-        req.flash('failure', `Error: ${e.message}`)
+        res.redirect("/reroute")
     }
 
 }))
 
-app.post("/api/login", passport.authenticate('local', { successRedirect: '/battleship', failureRedirect: '/login', failureMessage: true, failureFlash: true }), (req, res, next) => {
+app.post("/api/login", passport.authenticate('local', { successRedirect: '/battleship', failureRedirect: '/login', failureMessage: true, failureFlash: false }), (req, res, next) => {
     res.redirect("/reroute")
 })
 
 app.post("/api/logout", CatchAsync(async (req, res, next) => {
     console.log('logout!', req.user)
+
     req.logout(function (err) {
         if (err) { return next(err); }
         res.redirect("/reroute")
